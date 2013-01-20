@@ -2,29 +2,27 @@
 # register_mri_path.sh - register MRI images to pathology
 # Mark Palmeri (mlp6) & Sam Lipman (sll16)
 # 2012-02-06
-#
-# MODIFIED 2013-01-20
+#####################################################################################
+# MODIFIED 2013-01-20 (Mark & Sam)
 # consolidated variables for more generic patient application
 # cleaned up using new MI registration parameters
 # registered path reflect MI parameters
-# Mark & Sam
+# made the P# the first commandline argument and the number of slices in the
+# stack, including blanks, the second commandline argument
+#####################################################################################
 
-date
-hostname
-
-# have bash kill the job if we exceed 24G
-ulimit -v 25000000
-ulimit -d 25000000
+#ulimit -v 8000000
+#ulimit -d 8000000
 
 PATHOLOGY="allpath"
 
-PNUM='65'
+PNUM=$1
+NUM_MR_SEG_SLICES=$2
 PATIENT='Patient'$PNUM
 MRI_HIST_NII='Histo_MRI_'$PATHOLOGY'_regtest_MI.nii'
 P_PATH='/krnlab/ProstateStudy/invivo/'$PATIENT
 HIST_REG_PATH=$P_PATH'/Histology/registered'
 MR_PATH=$P_PATH'/MRI_Images'
-NUM_MR_SEG_SLICES='15'
 
 # setup MI parameters
 SYN=1.2 # MI step size
@@ -34,9 +32,12 @@ ITERS='200x200x100x50'
 
 REG_PATH=$P_PATH'/registered/SyN'$SYN_PATH'_NumBins'$NUM_BINS'_Iters'$ITERS
 
+echo 'Running ANTS image registration for '$PATIENT
+
 if [ ! -e $REG_PATH ]
 then
     mkdir -p $REG_PATH
+    echo 'Creating Directory: '$REG_PATH
 fi
 
 

@@ -27,6 +27,7 @@ def main():
     parser.add_argument("--reg_final_vol",help="path for registered final volume in ROOT/PatientPNUM",default="registered/SyN1p2_NumBins32_Iters200x200x100x50/final_volumes")
     parser.add_argument("--ijm_template_path",help="ImageJ macro template path",default="/krnlab/ProstateStudy/invivo/ImageRegScripts")
     parser.add_argument("--ijm_template",help="ImageJ macro template",default="Gen_MR_PCA_Overlays.ijm")
+    parser.add_argument("--ij",help="Path and commandline syntax to run ImageJ in batch mode",default="~/local/ImageJ/jre/bin/java -Xmx5000m -jar ~/local/ImageJ/ij.jar -ijpath ~/local/ImageJ")
 
     args = parser.parse_args()
     ROOT = args.root
@@ -38,6 +39,7 @@ def main():
     REG_FINAL_VOL = args.reg_final_vol
     IJM_TEMPLATE_PATH = args.ijm_template_path
     IJM_TEMPLATE = args.ijm_template
+    IJ = args.ij
 
     IJM_STRING_SUBS = {
         'ROOT_PNUM' : ROOT_PNUM,
@@ -61,14 +63,24 @@ def main():
     check_dir_file_exist('IJM_TEMPLATE','%s/%s' % (IJM_TEMPLATE_PATH,IJM_TEMPLATE))
 
     # copy IJM template into patient directory and modify for patient-specific files
-    P_IJM = open('%s/%s/%s' % (ROOT_PNUM,MR_HIST_PATH,IJM_TEMPLATE), 'w')
+    P_IJM_FILE = '%s/%s/%s' % (ROOT_PNUM,MR_HIST_PATH,IJM_TEMPLATE)
+    P_IJM_FID = open(P_IJM_FILE, 'w')
     ijm_temp_file = open('%s/%s' % (IJM_TEMPLATE_PATH,IJM_TEMPLATE),'r')
 
     for i in ijm_temp_file:
-        P_IJM.write(re_ijm_sub.sub(lambda m: IJM_STRING_SUBS[m.group(0)], i))
+        P_IJM_FID.write(re_ijm_sub.sub(lambda m: IJM_STRING_SUBS[m.group(0)], i))
 
     ijm_temp_file.close()
-    P_IJM.close()
+    P_IJM_FID.close()
+
+    print('Created ImageJ Batch Macro: %s' % P_IJM_FILE)
+
+    # run ImageJ in batch (headless) mode
+    print('Running ImageJ in batch mode...')
+    os.system('%s -batch %s' % (IJ,P_IJM_FILE))
+
+    print('Completed generation of overlay images')
+
 #####################################################################################################
 def check_dir_file_exist(str_holder,file_dir):
     '''
@@ -82,6 +94,8 @@ def check_dir_file_exist(str_holder,file_dir):
             print('Created Directory: %s' % file_dir)
         else:
             sys.exit('ERROR: %s = %s does not exist!' % (str_holder, file_dir))
+    else:
+        print('File/directory existence confirmed: %s' % file_dir)
 #####################################################################################################
 
 if __name__ == "__main__":
