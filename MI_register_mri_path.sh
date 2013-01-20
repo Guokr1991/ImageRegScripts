@@ -2,10 +2,12 @@
 # register_mri_path.sh - register MRI images to pathology
 # Mark Palmeri (mlp6) & Sam Lipman (sll16)
 # 2012-02-06
-
-for SGE_TASK_ID in 1 
-do
-echo $SGE_TASK_ID
+#
+# MODIFIED 2013-01-20
+# consolidated variables for more generic patient application
+# cleaned up using new MI registration parameters
+# registered path reflect MI parameters
+# Mark & Sam
 
 date
 hostname
@@ -14,50 +16,39 @@ hostname
 ulimit -v 25000000
 ulimit -d 25000000
 
-PATH_OPTIONS=( dummy allpath capsuleonly lesion BPH )
+PATHOLOGY="allpath"
 
-PATHOLOGY="${PATH_OPTIONS[$SGE_TASK_ID]}"
+PNUM='65'
+PATIENT='Patient'$PNUM
+MRI_HIST_NII='Histo_MRI_'$PATHOLOGY'_regtest_MI.nii'
+P_PATH='/krnlab/ProstateStudy/invivo/'$PATIENT
+HIST_REG_PATH=$P_PATH'/Histology/registered'
+MR_PATH=$P_PATH'/MRI_Images'
+NUM_MR_SEG_SLICES='15'
 
-PATIENT='Patient65'
-IMAGE_SIZE='737_370_366' # pixels x pixels x frames
-NUM_MRI_FRAMES='36'
-MRI_IMAGE_SIZE='512_512_'$NUM_MRI_FRAMES
-MRI_PATH_NII='Histo_MRI_'$PATHOLOGY'_regtest_CC_'$IMAGE_SIZE'.nii'
-P_PATH='/krnlab/ProstateStudy/invivo/'$PATIENT'/raw_hist_mr_capsule_test_reg'
-IMAGES_PATH=$P_PATH
-MRI_ITK_SEG_NII='P65_capsule.nii'
-REG_PATH=$P_PATH'/registered'
+# setup MI parameters
+SYN=1.2 # MI step size
+SYN_PATH=`echo $SYN | tr . p`
+NUM_BINS=32
+ITERS='200x200x100x50'
 
-MRI_CAPSULE='P65_capsule.nii'
-HIST_CAPSULE='P65_reg_capsule_vol_space_resliced_5blank_512_512_36.nii'
-MRI_HIST_CAPSULE='ANTS_Histo_MRI_ab_'$IMAGE_SIZE'_'
-HIST_CAPSULE_W_PATH='P65_Hist_reg_vol_MRresliced_5blank.nii'
+REG_PATH=$P_PATH'/registered/SyN'$SYN_PATH'_NumBins'$NUM_BINS'_Iters'$ITERS
 
-HIST_MRI_ANTS_CC='Histo_MRI_CC_'$IMAGE_SIZE'_'
-#SetSpacing 3 $REG_PATH/$HIST_CAPSULE $REG_PATH/$HIST_CAPSULE 0.3516 0.3516 2.9740028
-
-if [ ! -f $REG_PATH/$MRI_HIST_CAPSULE\Affine.txt ]
+if [ ! -e $REG_PATH ]
 then
-    echo $REG_PATH/$MRI_HIST_CAPSULE'Affine.txt does not exist; running initial ANTS commands'
-    ANTS 3 -m MI[ $REG_PATH/$MRI_CAPSULE,$REG_PATH/$HIST_CAPSULE,1,32] -i 0 -o $REG_PATH/$MRI_HIST_CAPSULE
-
-    ANTS 3 -m MI[ $REG_PATH/$MRI_CAPSULE,$REG_PATH/$HIST_CAPSULE,1,32] -o $REG_PATH/$HIST_MRI_ANTS_CC -i 200x200x100x50 -t SyN[100] -a $REG_PATH/$MRI_HIST_CAPSULE\Affine.txt #-r Gauss[0 3] 
+    mkdir -p $REG_PATH
 fi
 
-#HIST_PATH_CAPSULE=`echo $HIST_CAPSULE | sed s/no_lesion/$PATHOLOGY/`
-    WarpImageMultiTransform 3 $REG_PATH/$HIST_CAPSULE_W_PATH $REG_PATH/$MRI_PATH_NII -R $REG_PATH/$MRI_CAPSULE $REG_PATH/$HIST_MRI_ANTS_CC\Warp.nii.gz $REG_PATH/$MRI_HIST_CAPSULE\Affine.txt --use-NN
-#MRI_PATH_NEW='Histo_MRI_'$PATHOLOGY'_scaled_CC_'$IMAGE_SIZE
-#MRI_PATH_SCALED_NII='Histo_MRI_'$PATHOLOGY'_scaled_CC_'$IMAGE_SIZE'_'$MRI_IMAGE_SIZE'_base2apex.nii'
 
+MRI_CAPSULE='P'$PNUM'_caps_seg.nii'
+HIST_CAPSULE='P'$PNUM'_capsule_reg_MR_resliced_512_512_'$NUM_MR_SEG_SLICES'.nii'
+MRI_HIST_CAPSULE='ANTS_Histo_MRI_ab_'
+HIST_CAPSULE_W_HIST='P'$PNUM'_reg_MR_resliced_512_512_'$NUM_MR_SEG_SLICES'.nii'
 
-#matlab -nodesktop -nosplash -r "addpath('/krnlab/sll16/MATLAB'); make_registered_Histo_MR_sll16('$MRI_PATH_NII', '$MRI_PATH_NEW', $NUM_MRI_FRAMES, 0.15, 0.3516, 2.9740028); quit"
+HIST_MRI_ANTS_MI='Histo_MRI_MI'
 
+ANTS 3 -m MI[ $MR_PATH/$MRI_CAPSULE,$HIST_REG_PATH/$HIST_CAPSULE,1,$NUM_BINS] -i 0 -o $REG_PATH/$MRI_HIST_CAPSULE
 
+ANTS 3 -m MI[ $MR_PATH/$MRI_CAPSULE,$HIST_REG_PATH/$HIST_CAPSULE,1,$NUM_BINS] -o $REG_PATH/$HIST_MRI_ANTS_MI -i $ITERS -t SyN[$SYN] -a $REG_PATH/$MRI_HIST_CAPSULE\Affine.txt #-r Gauss[0 3] 
 
-    #SetSpacing 3 $REG_PATH/$MRI_PATH_SCALED_NII $REG_PATH/$MRI_PATH_SCALED_NII 0.3516 0.3516 2.9740028
-
-    #HIST_MRI_PATH_ANTS_CC='ANTS_reg_Histo_MRI_'$PATHOLOGY'_ab_'$IMAGE_SIZE'_'
-    #ANTS 3 -m CC[ $IMAGES_PATH/$MRI_ITK_SEG_NII,$REG_PATH/$MRI_PATH_SCALED_NII,1, 8] -i 0 -o $REG_PATH/$HIST_MRI_PATH_ANTS_CC
-
-    #WarpImageMultiTransform 3 $REG_PATH/$MRI_PATH_SCALED_NII $REG_PATH/Reg_$MRI_PATH_SCALED_NII -R $IMAGES_PATH/$MRI_ITK_SEG_NII $REG_PATH/$HIST_MRI_PATH_ANTS_CC\Affine.txt --use-NN
-done
+WarpImageMultiTransform 3 $HIST_REG_PATH/$HIST_CAPSULE_W_HIST $REG_PATH/$MRI_HIST_NII -R $MR_PATH/$MRI_CAPSULE $REG_PATH/$HIST_MRI_ANTS_MI\Warp.nii.gz $REG_PATH/$MRI_HIST_CAPSULE\Affine.txt --use-NN
