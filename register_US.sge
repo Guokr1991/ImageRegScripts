@@ -1,0 +1,12 @@
+#$ -l mem_free=4G
+#$ -l hostname=clawhammer
+
+ulimit -v 4000000
+ulimit -d 4000000
+
+date
+hostname
+
+/krnlab/ProstateStudy/invivo/ImageRegScripts/MI_register_us_path.sh 59 150
+
+qstat -j $JOB_ID
