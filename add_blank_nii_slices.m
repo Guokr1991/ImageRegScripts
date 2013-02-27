@@ -43,11 +43,13 @@ if (length(path_seg) > length(image_seg)),
 else,
     num_blanks_to_have_each_side = ceil(((num_nonzero_image_slices - num_nonzero_path_slices) + 2)/2);
     
-    % add zeros to the front of the vector as needed (the sum indicates the number of positions that are non-zero)
-    path_blanks_to_add(1) = sum(path_seg(1:num_blanks_to_have_each_side))
+    % add zeros to the front of the vector as needed 
+    first_nonzero_index = min(find(path_seg > 0));
+    path_blanks_to_add(1) = num_blanks_to_have_each_side + 1 - first_nonzero_index;
 
     % do the same to the end
-    path_blanks_to_add(2) = sum(path_seg(end:-1:(end-num_blanks_to_have_each_side+1)))
+    last_nonzero_index = max(find(path_seg > 0));
+    path_blanks_to_add(2) = num_blanks_to_have_each_side - (length(path_seg) - last_nonzero_index)
 end;
 
 write_run_ijm_macro(path_nii_stack,length(path_seg),path_blanks_to_add)
@@ -84,7 +86,6 @@ end;
 fprintf(fid,'run("Reverse");\n');
 new_num_slices = num_orig_slices+sum(blanks_to_add);
 new_filename = regexprep(original_filename,'_\d*.nii',sprintf('_%i.nii',new_num_slices));
-keyboard
 fprintf(fid,'run("NIfTI-1", "save=./%s");\n',new_filename);
 fclose(fid);
 system('~/local/ImageJ/jre/bin/java -Xmx5000m -jar ~/local/ImageJ/ij.jar -ijpath ~/local/ImageJ -batch add_blank_nii_slices.ijm');
