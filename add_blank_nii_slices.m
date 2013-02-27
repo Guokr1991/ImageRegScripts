@@ -83,7 +83,7 @@ if(blanks_to_add(1) > 0),
 end;
 fprintf(fid,'run("Reverse");\n');
 new_num_slices = num_orig_slices+sum(blanks_to_add);
-new_filename = regexprep(original_filename,'\d\d.nii',sprintf('%i.nii',new_num_slices));
+new_filename = regexprep(original_filename,'_\d*.nii',sprintf('_%i.nii',new_num_slices));
 keyboard
 fprintf(fid,'run("NIfTI-1", "save=./%s");\n',new_filename);
 fclose(fid);
