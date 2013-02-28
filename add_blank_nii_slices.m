@@ -29,7 +29,8 @@ num_nonzero_image_slices = sum(image_seg)
 
 % check to see if path has more slices than image 
 % if so, then just add one extra blank to each side of path if they aren't already blank
-if (length(path_seg) > length(image_seg)),
+if (num_nonzero_path_slices > num_nonzero_image_slices),
+    disp('Number of pathology stack segmented slices is larger than image stack...');
     if (path_seg(1) ~= 0),
         path_blanks_to_add(1) = 1;
     else,
@@ -40,6 +41,7 @@ if (length(path_seg) > length(image_seg)),
     else,
         path_blanks_to_add(2) = 0;
     end;
+    disp(path_blanks_to_add)
 else,
     num_blanks_to_have_each_side = ceil(((num_nonzero_image_slices - num_nonzero_path_slices) + 2)/2);
     
