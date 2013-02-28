@@ -28,10 +28,11 @@ HIST_REG_PATH=$P_PATH'/Histology/registered'
 MR_PATH=$P_PATH'/MRI_Images'
 
 # setup MI parameters
-#SYN=1.2 # MI step size
-SYN=$3 # MI step size
+SYN=1.2 # MI step size
+#SYN=$3 # MI step size
 SYN_PATH=`echo $SYN | tr . p`
-RADIUS=$4
+#RADIUS=$4
+RADIUS=8
 ITERS='200x200x100x50'
 
 REG_PATH=$P_PATH'/registered/MR_CC_SyN'$SYN_PATH'_Radius'$RADIUS'_Iters'$ITERS
