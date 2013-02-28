@@ -34,7 +34,7 @@ SYN_PATH=`echo $SYN | tr . p`
 RADIUS=$4
 ITERS='200x200x100x50'
 
-REG_PATH=$P_PATH'/registered/CC_SyN'$SYN_PATH'_Radius'$RADIUS'_Iters'$ITERS
+REG_PATH=$P_PATH'/registered/MR_CC_SyN'$SYN_PATH'_Radius'$RADIUS'_Iters'$ITERS
 
 echo 'Running ANTS image registration for '$PATIENT
 
