@@ -23,12 +23,13 @@ def main():
     parser.add_argument("--us_hist_path",help="Path in ROOT/PatientPNUM containing US Histology Nifti input",default="registered/US_CC_SyN1p2_Radius8_Iters200x200x100x50")
     parser.add_argument("--us_hist_nii",help="US Histology Nifti input",default="Histo_US_allpath_regtest_CC.nii")
     parser.add_argument("--us_path",help="path for US Nifti input",default="loupas")
-    parser.add_argument("--arfi_nii",help="ARFI Nifti input",default="ARFI.nii")
-    parser.add_argument("--bmode_nii",help="B-mode Nifti input",default="BMODE.nii")
+    parser.add_argument("--arfi_path",help="path for ARFI Nifti input",default="AxialImages_imwrite")
+    parser.add_argument("--arfi_nii",help="ARFI Nifti input",default="P_ARFI_TS3.nii")
+    parser.add_argument("--bmode_raw",help="B-mode Nifti input",default="bvolume_737_370_366.raw")
     parser.add_argument("--reg_final_vol",help="path for registered final volume in ROOT/PatientPNUM",default="registered/US_CC_SyN1p2_Radius8_Iters200x200x100x50/final_volumes")
     parser.add_argument("--ijm_template_path",help="ImageJ macro template path",default="/krnlab/ProstateStudy/invivo/ImageRegScripts")
     parser.add_argument("--ijm_template",help="ImageJ macro template",default="Gen_US_Overlays.ijm")
-    parser.add_argument("--ij",help="Path and commandline syntax to run ImageJ in batch mode",default="~/local/ImageJ/jre/bin/java -Xmx5000m -jar ~/local/ImageJ/ij.jar -ijpath ~/local/ImageJ")
+    parser.add_argument("--ij",help="Path and commandline syntax to run ImageJ in batch mode",default="~/local/ImageJ/jre/bin/java -Xmx10000m -jar ~/local/ImageJ/ij.jar -ijpath ~/local/ImageJ")
 
     args = parser.parse_args()
     ROOT = args.root
@@ -36,8 +37,9 @@ def main():
     US_HIST_PATH = args.us_hist_path
     US_HIST_NII = args.us_hist_nii
     US_PATH = args.us_path
+    ARFI_PATH = args.arfi_path
     ARFI_NII = args.arfi_nii
-    BMODE_NII= args.bmode_nii
+    BMODE_RAW= args.bmode_raw
     REG_FINAL_VOL = args.reg_final_vol
     IJM_TEMPLATE_PATH = args.ijm_template_path
     IJM_TEMPLATE = args.ijm_template
@@ -48,8 +50,9 @@ def main():
         'US_HIST_PATH' : US_HIST_PATH,
         'US_HIST_NII' : US_HIST_NII,
         'US_PATH' : US_PATH,
+        'ARFI_PATH' : ARFI_PATH,
         'ARFI_NII' : ARFI_NII,
-        'BMODE_NII' : BMODE_NII,
+        'BMODE_RAW' : BMODE_RAW,
         'REG_FINAL_VOL' : REG_FINAL_VOL,
         }
     re_ijm_sub = re.compile('|'.join(IJM_STRING_SUBS.keys()))
@@ -60,8 +63,8 @@ def main():
     check_dir_file_exist('US_HIST_PATH','%s/%s' % (ROOT_PNUM,US_HIST_PATH))
     check_dir_file_exist('US_HIST_NII','%s/%s/%s' % (ROOT_PNUM,US_HIST_PATH,US_HIST_NII))
     check_dir_file_exist('US_PATH','%s/%s' % (ROOT_PNUM,US_PATH))
-    check_dir_file_exist('ARFI_NII','%s/%s/%s' % (ROOT_PNUM,US_PATH,ARFI_NII))
-    check_dir_file_exist('BMODE_NII','%s/%s/%s' % (ROOT_PNUM,US_PATH,BMODE_NII))
+    check_dir_file_exist('ARFI_NII','%s/%s/%s/%s' % (ROOT_PNUM,US_PATH,ARFI_PATH,ARFI_NII))
+    check_dir_file_exist('BMODE_RAW','%s/%s/%s' % (ROOT_PNUM,US_PATH,BMODE_RAW))
     check_dir_file_exist('REG_FINAL_VOL','%s/%s' % (ROOT_PNUM,REG_FINAL_VOL))
     check_dir_file_exist('IJM_TEMPLATE_PATH',IJM_TEMPLATE_PATH)
     check_dir_file_exist('IJM_TEMPLATE','%s/%s' % (IJM_TEMPLATE_PATH,IJM_TEMPLATE))

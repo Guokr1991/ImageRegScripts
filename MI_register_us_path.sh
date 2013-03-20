@@ -30,7 +30,7 @@ SYN_PATH=`echo $SYN | tr . p`
 NUM_BINS=32
 ITERS='200x200x100x50'
 
-REG_PATH=$P_PATH'/registered/SyN'$SYN_PATH'_NumBins'$NUM_BINS'_Iters'$ITERS
+REG_PATH=$P_PATH'/registered/US_MI_SyN'$SYN_PATH'_NumBins'$NUM_BINS'_Iters'$ITERS
 
 echo 'Running ANTS image registration for '$PATIENT
 

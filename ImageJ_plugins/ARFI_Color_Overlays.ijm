@@ -47,5 +47,11 @@ run("Convert to Mask", "method=Default background=Dark black");
 run("Find Edges", "stack");
 run("Magenta");
 run("Merge Channels...", "c1=ARFI c2=Capsule c3=[Gleason 3] c4=[Gleason 4] c5=Atrophy c6=BPH create keep");
-run("Channels Tool...");
-
+selectWindow("Composite");
+run("Stack to RGB", "slices");
+close("Atrophy");
+close("BPH");
+close("Gleason 3");
+close("Gleason 4");
+close("Capsule");
+close("ARFI");

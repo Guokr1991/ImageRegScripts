@@ -1,8 +1,8 @@
 open("ROOT_PNUM/MR_HIST_PATH/MR_HIST_NII");
-run("Duplicate...", "title=[Gleason 3] duplicate range=1-36");
-run("Duplicate...", "title=[Gleason 4] duplicate range=1-36");
-run("Duplicate...", "title=[BPH] duplicate range=1-36");
-run("Duplicate...", "title=[Atrophy] duplicate range=1-36");
+run("Duplicate...", "title=[Gleason 3] duplicate range=1-50");
+run("Duplicate...", "title=[Gleason 4] duplicate range=1-50");
+run("Duplicate...", "title=[BPH] duplicate range=1-50");
+run("Duplicate...", "title=[Atrophy] duplicate range=1-50");
 selectWindow("MR_HIST_NII");
 setAutoThreshold("Default dark");
 setThreshold(0.5,7.0);
