@@ -1,0 +1,3 @@
+#$ -l mem_free=4G
+
+/krnlab/ProstateStudy/invivo/ImageRegScripts/CC_register_mri_path.sh 64 14
