@@ -17,6 +17,6 @@ function reslice_voxel(nii_file,voxel_size)
 
 addpath('/radforce/mlp6/NIFTI_20121012');
 
-resliced_filename = regexprep(nii_file,'.nii','_resliced.nii');
+resliced_filename = regexprep(nii_file,'.nii.gz','_resliced.nii.gz');
 
 reslice_nii(nii_file,resliced_filename,voxel_size,1,0,2);
