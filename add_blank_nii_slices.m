@@ -16,7 +16,7 @@ function []=add_blank_nii_slices(path_nii_stack,image_nii_stack)
 % mlp6@duke.edu
 % 2013-02-26
 
-addpath('/radforce/mlp6/NIFTI_20121012/');
+addpath('/home/mlp6/matlab/NIFTI_20130306/');
 
 pathnii = load_nii(path_nii_stack);
 imagenii = load_nii(image_nii_stack);
