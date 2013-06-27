@@ -22,7 +22,7 @@ PATIENT='Patient'$PNUM
 US_HIST_NII='Histo_US_'$PATHOLOGY'_regtest_CC.nii'
 P_PATH='/krnlab/ProstateStudy/invivo/'$PATIENT
 HIST_REG_PATH=$P_PATH'/Histology/registered'
-US_PATH=$P_PATH'/loupas'
+US_PATH=$P_PATH'/loupas.old'
 
 # setup MI parameters
 SYN=1.2 # MI step size
