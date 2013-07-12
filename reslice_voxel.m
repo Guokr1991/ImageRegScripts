@@ -15,7 +15,7 @@ function reslice_voxel(nii_file,voxel_size)
 %
 % EXAMPLE: reslice_voxel('P27_reg_US.nii',[0.1877 0.1877 0.1877);
 
-addpath('/radforce/mlp6/NIFTI_20121012');
+addpath('/radforce/mlp6/NIFTI_MATLAB');
 
 resliced_filename = regexprep(nii_file,'.nii.gz','_resliced.nii.gz');
 

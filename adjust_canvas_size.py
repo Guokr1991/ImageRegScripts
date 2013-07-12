@@ -1,4 +1,4 @@
-#!/usr/local/bin/python2.7
+#!/usr/bin/env python
 '''
 adjust_canvas_size.py - adjust canvas size of the path Nifti1 stack to match the native imaging modality canvas size
 '''

@@ -43,9 +43,9 @@ fi
 
 
 US_CAPSULE='Patient'$PNUM'_seg.nii.gz'
-HIST_CAPSULE='P'$PNUM'_capsule_reg_US_resliced_737_370_'$NUM_US_SEG_SLICES'.nii.gz'
+HIST_CAPSULE='P'$PNUM'_capsule_reg_US_resliced_585_286_'$NUM_US_SEG_SLICES'.nii.gz'
 US_HIST_CAPSULE='ANTS_Histo_US_ab_'
-HIST_CAPSULE_W_HIST='P'$PNUM'_reg_US_resliced_737_370_'$NUM_US_SEG_SLICES'.nii.gz'
+HIST_CAPSULE_W_HIST='P'$PNUM'_reg_US_resliced_585_286_'$NUM_US_SEG_SLICES'.nii.gz'
 
 HIST_US_ANTS_CC='Histo_US_CC_'
 
