@@ -1,0 +1,149 @@
+%pure thresholding approach,use this code
+
+path20=imread('/luscinia/ProstateStudy/invivo/Patient79/Histology/Oldfiles/P79_A012.tif');
+B=path20;
+figure(1)
+imshow(B)
+A1=zeros(size(path20,1),size(path20,2),3);
+A2=zeros(size(path20,1),size(path20,2),3);
+A3=zeros(size(path20,1),size(path20,2),3);
+%BPH red
+a=path20(:,:,1)>160&path20(:,:,2)<120&path20(:,:,3)<150;
+A1(:,:,1)=a.*255;
+A1(:,:,2)=0;
+A1(:,:,3)=0;
+figure(2)
+imshow(A1)
+%atrophy blue
+a=(B(:,:,1)<=130)&(100<B(:,:,2))&(B(:,:,2)<200)&(B(:,:,3)>210);
+A2(:,:,1)=0;
+A2(:,:,2)=0;
+A2(:,:,3)=a.*255;
+figure(3)
+imshow(A2)
+a=(B(:,:,1)>170)&(B(:,:,2)>170)&(B(:,:,3)>170);
+A3(:,:,1)=a.*236;
+A3(:,:,2)=a.*208;
+A3(:,:,3)=a.*237;
+figure(4)
+Atot=A1+A2+A3;
+imshow(Atot)
+
+%this is where I tried the min Euclidean distance approach, intitially I was going to try to threshold each color 
+individually, this did not work so I went with the min approach. This is a terrible explanation, and I will update
+these explanations over the weekend.
+
+% red=[255 0 0];
+% blue=[0 0 255];
+% pink=[220 180 230];
+% black=[0 0 0];
+% green=[0 100 0];
+% purple=[186 75 211];
+% white=[255 255 255];
+% firstrowcolor=[255 0 220 0 0 186 255];
+% secondrowcolor=[0 0 180 0 100 75 255];
+% thirdrowcolor=[0 255 230 0 0 211 255];
+% A=zeros(size(path20,1),size(path20,2),3,7);
+% for i=1:7
+% A(:,:,1,i)=firstrowcolor(i);
+% A(:,:,2,i)=secondrowcolor(i);
+% A(:,:,3,i)=thirdrowcolor(i);
+% A1=squeeze(A(:,:,1,:));
+% A2=squeeze(A(:,:,2,:));
+% A3=squeeze(A(:,:,3,:));
+% B1(:,:,i)=(single(A1(:,:,i))-single(path20(:,:,1))).^2;
+% B2(:,:,i)=(single(A2(:,:,i))-single(path20(:,:,2))).^2;
+% B3(:,:,i)=(single(A3(:,:,i))-single(path20(:,:,3))).^2;
+% end
+% for i=1:7
+% B(:,:,i)=sqrt(sum(B1(:,:,i)+B2(:,:,i)+B3(:,:,i),3));
+% end
+% [a minindices]=min(B,[],3);
+% Ared=zeros(size(path20,1),size(path20,2),3);
+% Ablue=zeros(size(path20,1),size(path20,2),3);
+% for i=1:7
+%     if i==1
+% minindices((minindices)==1)=1;
+% minindices((minindices)~=1)=0;
+% Ared(:,:,1)=minindices.*255;
+% Ared(:,:,2)=0;
+% Ared(:,:,3)=0;
+%     end
+%     [a minindices]=min(B,[],3);
+%     if i==2
+%         minindices((minindices==2))=1;
+%         minindices((minindices)~=2)=0;
+%         Ablue(:,:,1)=0;
+%         Ablue(:,:,2)=0;
+%         Ablue(:,:,3)=minindices.*255;
+%     end
+% end
+%     figure(5)
+%     imshow(Ared)
+% % 
+% 
+% A(:,:,1)=255;
+% A(:,:,2)=0;
+% A(:,:,3)=0;
+% B=sqrt(sum((single(A)-single(path20)).^2,3));
+% B(B>180)=0;
+% B(B>20)=255;
+% A=zeros(size(path20,1),size(path20,2),3);
+% figure(1)
+% A(:,:,1)=B;
+% A(:,:,2)=0;
+% A(:,:,3)=0;
+% imshow(A)
+% 
+% for i=1:size(B,1)
+% tsig = (abs(B(i,:)) > eps); 
+% dsig = diff([1 tsig 1]);
+% startIndex = find(dsig < 0);
+% endIndex = find(dsig == 1);
+% count = endIndex-startIndex;
+% %red
+% for j=1:length(startIndex)
+% if count(j)<20
+% B(i,(startIndex(j):endIndex(j)-1))=255;
+% end
+% end
+% end
+% figure(2)
+% A(:,:,1)=B;
+% A(:,:,2)=0;
+% A(:,:,3)=0;
+% imshow(A)
+% for i=1:size(B,1)
+%     tsig = (abs(B(i,:)) > eps);
+% dsigred=diff([0 tsig 0]);
+% startIndexred=find(dsigred==1);
+% endIndexred=find(dsigred==-1);
+% countred=endIndexred-startIndexred;
+% for k=1:length(startIndexred)
+%     if countred(k)<20
+% B(i,startIndexred(k):endIndexred(k)-1)=0;
+%     end
+% end
+% end
+% figure(3)
+% A(:,:,1)=B;
+% A(:,:,2)=0;
+% A(:,:,3)=0;
+% imshow(A)
+% for i=1:size(B,1)
+%     tsig = (abs(B(i,:)) > eps);
+% dsigred=diff([0 tsig 0]);
+% startIndexred=find(dsigred==1);
+% endIndexred=find(dsigred==-1);
+% countred=endIndexred-startIndexred;
+% for k=1:length(startIndexred)
+%     if countred(k)<5
+% B(i,startIndexred(k):endIndexred(k)-1)=0;
+%     end
+% end
+% end
+% figure(4)
+% A(:,:,1)=B;
+% A(:,:,2)=0;
+% A(:,:,3)=0;
+% imshow(A)
