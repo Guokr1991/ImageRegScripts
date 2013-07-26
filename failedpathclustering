@@ -1,0 +1,91 @@
+%This code was based on using euclidean distance to cluster different colors. The essential idea was that BPH
+%Gleason grade 3, Gleason grade 4, etc all had different RGB colors that varied about some mean value. Assuming that the
+%variance about each colors mean value did not overlap with any other colors than by thresholding, clusters could be 
+fixed to one color. The code below only applies this algorithim to BPH. This code also cleans up ditzels found in the 
+image by searching along each x-line for counts of consecutive red/black pixels less than 10/20. I think this does
+a fair job of cleaning up the image, but it changes red pixels to black pixels and vise versa on curved parts of the BPH.
+There are probably much better ways to do this, but I wanted to come up with a  technique on my own. Ultimately, when I 
+expanded this code to include every color: create MXNX7 matrix with each euclidean distance from the seven possible color types
+and choose minimum distance, it was not segmenting appropriately. I then tried Matlab's built in k-means segmenter, but
+I didn't love the results. I decided to take a pure thresholding approach without calculating Euclidean distances which
+I think should work well. 
+
+path20=imread('/luscinia/ProstateStudy/invivo/Patient79/Histology/Oldfiles/P79_A012.tif');
+red=[255 0 0];
+blue=[0 0 255];
+pink=[220 180 230];
+black=[0 0 0];
+green=[0 100 0];
+purple=[186 75 211];
+white=[255 255 255];
+color=[red;blue;pink;black;green;purple;white];
+A=zeros(size(path20,1),size(path20,2),3);
+A(:,:,1)=255;
+A(:,:,2)=0;
+A(:,:,3)=0;
+B=sqrt(sum((single(A)-single(path20)).^2,3));
+B(B>180)=0;
+B(B>20)=255;
+A=zeros(size(path20,1),size(path20,2),3);
+figure(1)
+A(:,:,1)=B;
+A(:,:,2)=0;
+A(:,:,3)=0;
+imshow(A)
+
+for i=1:size(B,1)
+tsig = (abs(B(i,:)) > eps); 
+dsig = diff([1 tsig 1]);
+startIndex = find(dsig < 0);
+endIndex = find(dsig == 1);
+count = endIndex-startIndex;
+%red
+for j=1:length(startIndex)
+if count(j)<20
+B(i,(startIndex(j):endIndex(j)-1))=255;
+end
+end
+end
+figure(2)
+A(:,:,1)=B;
+A(:,:,2)=0;
+A(:,:,3)=0;
+imshow(A)
+for i=1:size(B,1)
+    tsig = (abs(B(i,:)) > eps);
+dsigred=diff([0 tsig 0]);
+startIndexred=find(dsigred==1);
+endIndexred=find(dsigred==-1);
+countred=endIndexred-startIndexred;
+for k=1:length(startIndexred)
+    if countred(k)<20
+B(i,startIndexred(k):endIndexred(k)-1)=0;
+    end
+end
+end
+figure(3)
+A(:,:,1)=B;
+A(:,:,2)=0;
+A(:,:,3)=0;
+imshow(A)
+for i=1:size(B,1)
+    tsig = (abs(B(i,:)) > eps);
+dsigred=diff([0 tsig 0]);
+startIndexred=find(dsigred==1);
+endIndexred=find(dsigred==-1);
+countred=endIndexred-startIndexred;
+for k=1:length(startIndexred)
+    if countred(k)<5
+B(i,startIndexred(k):endIndexred(k)-1)=0;
+    end
+end
+end
+figure(4)
+A(:,:,1)=B;
+A(:,:,2)=0;
+A(:,:,3)=0;
+imshow(A)
+
+
+
+
