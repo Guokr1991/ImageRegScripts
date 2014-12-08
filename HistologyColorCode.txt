@@ -1,0 +1,6 @@
+Purple:         Gleason 4
+Green:          Gleason 3
+Black:          Urethra
+Blue:           Atrophy
+Red:            Hyperplasia
+Magenta:        Verunmantanum
