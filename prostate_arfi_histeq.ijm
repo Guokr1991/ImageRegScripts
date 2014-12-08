@@ -8,7 +8,7 @@
 // mlp6@duke.edu
 // 2013-07-09
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-open("./ARFI.nii.gz");
+open("./ARFI_Norm.nii.gz");
 run("Enhance Contrast...", "saturated=1 normalize equalize process_all use");
 //run("Enhance Contrast...", "saturated=1 normalize equalize process_all use");
-run("NIfTI-1", "save=./ARFI_HistEq.nii");
+run("NIfTI-1", "save=./ARFI_Norm_HistEq.nii");
