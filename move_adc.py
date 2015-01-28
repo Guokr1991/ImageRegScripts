@@ -11,4 +11,4 @@ for origdir in adcdirs:
         print('I just made %s!!' % target_path)
     else:
         print('Target directory already exists!!')
-    os.system('rsync -av %s/ %s' % (origdir, target_path))
+    os.system('rsync -av %s/_r*/ %s' % (origdir, target_path))
